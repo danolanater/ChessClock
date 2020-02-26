@@ -11,9 +11,9 @@ import android.widget.Button;
 
 public class ClockActivity extends AppCompatActivity {
 
-    private String whiteTimeString, blackTimeString, incrementString;
+    private String whiteTimeString, blackTimeString, whiteIncrementString, blackIncrementString;
     private Button whiteButton, blackButton;
-    private int whiteTimeInt, blackTimeInt, incrementInt;
+    private int whiteTimeInt, blackTimeInt, whiteIncrementInt, blackIncrementInt;
     private CountDownTimer whiteTimer, blackTimer;
     private int whiteMoveCount = 0, blackMoveCount = -1;
 
@@ -70,8 +70,8 @@ public class ClockActivity extends AppCompatActivity {
                 blackMoveCount++;
                 whiteTimer.start();
 
-                if(incrementInt > 0 && blackMoveCount != 0){
-                    blackTimeInt += incrementInt;
+                if(blackIncrementInt > 0 && blackMoveCount != 0){
+                    blackTimeInt += blackIncrementInt;
                     blackButton.setText(parseString(blackTimeInt));
                 }
                 whiteButton.setEnabled(true);
@@ -102,8 +102,8 @@ public class ClockActivity extends AppCompatActivity {
                     whiteTimer.cancel();
                     whiteMoveCount++;
                     blackTimer.start();
-                if(incrementInt > 0){
-                    whiteTimeInt += incrementInt;
+                if(whiteIncrementInt > 0){
+                    whiteTimeInt += whiteIncrementInt;
                     whiteButton.setText(parseString(whiteTimeInt));
                 }
                     whiteButton.setEnabled(false);
@@ -117,44 +117,92 @@ public class ClockActivity extends AppCompatActivity {
     private void setValues(Bundle b) {
         whiteTimeString = b.getString("whiteTime");
         blackTimeString = b.getString("blackTime");
-        incrementString = b.getString("increment");
-
-        whiteButton.setText(whiteTimeString);
-        blackButton.setText(blackTimeString);
+        whiteIncrementString = b.getString("whiteIncrement");
+        blackIncrementString = b.getString("blackIncrement");
 
         whiteTimeInt = parseTime(whiteTimeString);
         blackTimeInt = parseTime(blackTimeString);
-        incrementInt = parseTime(incrementString);
-        System.out.println(whiteTimeInt + " " + blackTimeInt + " " + incrementInt);
+        whiteIncrementInt = parseTime(whiteIncrementString);
+        blackIncrementInt = parseTime(blackIncrementString);
+
+        whiteButton.setText(parseString(whiteTimeInt));
+        blackButton.setText(parseString(blackTimeInt));
     }
 
     private int parseTime(String s) {
-        try {
+        if(s.split(":").length == 2) {
             String[] minsAndSecs = s.split(":");
             int mins = Integer.parseInt(minsAndSecs[0]);
             int secs = Integer.parseInt(minsAndSecs[1]);
 
-            return (mins *60 + secs) * 1000;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Bundle","likely bundle parsing error, check input values??");
-            return 0;
+            return (mins * 60 + secs) * 1000;
+        } else {
+
+            int hours, mins;
+
+            if(s.charAt(3) == ' ') {
+                hours = Integer.parseInt(s.substring(0,1));
+                if(s.charAt(6) == 'm')
+                    mins = Integer.parseInt(s.substring(4,6));
+                else
+                    mins = Integer.parseInt(s.substring(4,5));
+            } else {
+                hours = Integer.parseInt(s.substring(0,2));
+                if(s.charAt(7) == 'm')
+                    mins = Integer.parseInt(s.substring(5,7));
+                else
+                    mins = Integer.parseInt(s.substring(5,6));
+            }
+
+            return (hours * 60 + mins) * 60 * 1000;
         }
+
     }
 
     private String parseString(int value) {
-        int mins, sec, tenth;
+        int hours, mins, sec, tenth;
 
         int i = value;
-
+        hours = i / (1000 *60 * 60);
+        i -= hours * 1000 * 60 * 60;
         mins = i / (1000*60);
         i -= mins * 1000 * 60;
         sec = i / 1000;
         i -= sec * 1000;
         tenth = i /100;
 
+        // if longer than 1 hour remains...
+        if(value >= 1000 * 60 * 60) {
+            if(mins >= 10) {
+                if(sec >= 10) {
+                    if (tenth > 0)
+                        return hours + ":" + mins + ":" + sec;
+                    else
+                        return hours + ":" + mins + ":" + sec;
+                } else {
+                    if (tenth > 0)
+                        return hours + ":" + mins + ":0" + sec;
+                    else
+                        return hours + ":" + mins + ":0" + sec;
+                }
+            } else {
+                if(sec >= 10) {
+                    if (tenth > 0)
+                        return hours + ":0" + mins + ":" + sec;
+                    else
+                        return hours + ":0" + mins + ":" + sec;
+                } else {
+                    if (tenth > 0)
+                        return hours + ":0" + mins + ":0" + sec;
+                    else
+                        return hours + ":0" + mins + ":0" + sec;
+                }
+            }
+
+        }
+
         // if longer than 1 minute remains...
-        if(value > 1000 * 60) {
+        else if(value >= 1000 * 60) {
             if(sec >= 10) {
                 if (tenth > 0)
                     return mins + ":" + sec;
@@ -167,6 +215,7 @@ public class ClockActivity extends AppCompatActivity {
                     return mins + ":0" + sec;
             }
         }
+        // if less than a minute remains
         else {
             if (sec >= 10)
                 return "0:" + sec + ":" + tenth;
