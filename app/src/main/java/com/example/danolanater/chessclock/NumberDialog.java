@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 class NumberDialog extends Dialog{
 
@@ -48,8 +49,12 @@ class NumberDialog extends Dialog{
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button.setText(createButtonString());
-                dismiss();
+                if(hourPicker.getValue() + minutePicker.getValue() + secondPicker.getValue() == 0) {
+                    Toast.makeText(getContext(),"Please choose a valid time", Toast.LENGTH_SHORT).show();
+                } else {
+                    button.setText(createButtonString());
+                    dismiss();
+                }
             }
         });
 

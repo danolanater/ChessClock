@@ -2,6 +2,8 @@ package com.example.danolanater.chessclock;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -18,79 +20,46 @@ import android.widget.Toast;
 
 import java.time.Clock;
 
-// todo: create intent for new game, come up with other game modes
+// todo: come up with other game modes
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button modeButton, whiteTimeButton, blackTimeButton, whiteIncrementButton, blackIncrementButton, startButton;
+    private Button standardButton, fideButton;
+    private boolean standardMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        modeButton = (Button) findViewById(R.id.modeButton);
-        whiteTimeButton = (Button) findViewById(R.id.whiteTimeButton);
-        blackTimeButton = (Button) findViewById(R.id.blackTimeButton);
-        whiteIncrementButton = (Button) findViewById(R.id.whiteIncrementButton);
-        blackIncrementButton = (Button) findViewById(R.id.blackIncrementButton);
-        startButton = (Button) findViewById(R.id.startButton);
+        standardButton = (Button) findViewById(R.id.standardButton);
+        fideButton = (Button) findViewById(R.id.fideButton);
 
-        modeButton.setOnClickListener(new View.OnClickListener() {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentLayout, new StandardGameFragment());
+        fragmentTransaction.commit();
+
+        standardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (standardMode) {
+                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragmentLayout, new StandardGameFragment());
+                    fragmentTransaction.commit();
+                }
             }
         });
 
-        whiteTimeButton.setOnClickListener(new View.OnClickListener() {
+        fideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                NumberDialog dialog = new NumberDialog(MainActivity.this, whiteTimeButton);
-                dialog.show();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentLayout, new FideGameFragement());
+                fragmentTransaction.commit();
             }
         });
 
-        blackTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NumberDialog dialog = new NumberDialog(MainActivity.this, blackTimeButton);
-                dialog.show();
-            }
-        });
-
-        whiteIncrementButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NumberDialog dialog = new NumberDialog(MainActivity.this, whiteIncrementButton);
-                dialog.show();
-            }
-        });
-
-        blackIncrementButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NumberDialog dialog = new NumberDialog(MainActivity.this, blackIncrementButton);
-                dialog.show();
-            }
-        });
-
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Bundle b = new Bundle();
-                b.putString("whiteTime", whiteTimeButton.getText().toString());
-                b.putString("blackTime", blackTimeButton.getText().toString());
-                b.putString("whiteIncrement", whiteIncrementButton.getText().toString());
-                b.putString("blackIncrement", blackIncrementButton.getText().toString());
-
-                Intent clockActivity = new Intent(getApplicationContext(), ClockActivity.class);
-                clockActivity.putExtras(b);
-                startActivity(clockActivity);
-            }
-        });
     }
 
 }

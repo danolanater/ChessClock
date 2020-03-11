@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+// todo: show move count
+
 public class ClockActivity extends AppCompatActivity {
 
     private String whiteTimeString, blackTimeString, whiteIncrementString, blackIncrementString;

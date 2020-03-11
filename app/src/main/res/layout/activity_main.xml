@@ -7,110 +7,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="50dp"
     android:paddingLeft="50dp"
     android:paddingRight="50dp"
+    android:paddingBottom="50dp"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/modeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mode: Standard"
-        android:layout_gravity="center"/>
-
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:autoSizeTextType="uniform"
+        android:text="Game Mode"
+        android:background="@drawable/radio_flat_selected"
+        android:textColor="@color/colorWhite"
+        android:textAlignment="center" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="White"
-                android:autoSizeTextType="uniform"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Time"/>
-
-             <Button
-                 android:id="@+id/whiteTimeButton"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:text="5:00"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Increment"/>
-
-            <Button
-                android:id="@+id/whiteIncrementButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0:00"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:gravity="right">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Black"
-                android:gravity="right"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Time"
-                android:gravity="right"/>
-
-            <Button
-                android:id="@+id/blackTimeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5:00"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Increment"
-                android:gravity="right"/>
-
-            <Button
-                android:id="@+id/blackIncrementButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0:00"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/radioModeSelector"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:paddingBottom="25dp">
 
-        <Button
-            android:id="@+id/startButton"
+        <RadioButton
+            android:id="@+id/standardButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start"
-            android:layout_gravity="bottom"/>
+            android:layout_weight="1"
+            android:checked="true"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:textAlignment="center"
+            android:text="Standard"
+            android:textColor="@color/radio_flat_text_selector"
 
+            />
+
+        <RadioButton
+            android:id="@+id/fideButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:text="FIDE"
+            android:textAlignment="center"
+            android:textColor="@color/radio_flat_text_selector" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/fragmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     </LinearLayout>
 
 
