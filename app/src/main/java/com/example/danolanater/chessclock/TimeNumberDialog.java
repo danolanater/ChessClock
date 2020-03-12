@@ -2,19 +2,18 @@ package com.example.danolanater.chessclock;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-class NumberDialog extends Dialog{
+class TimeNumberDialog extends Dialog{
 
     private NumberPicker hourPicker, minutePicker, secondPicker;
     private int hours, mins, secs;
 
-    public NumberDialog(@NonNull Context context, Button button, Button buttonPair, boolean mirrorState) {
+    public TimeNumberDialog(@NonNull Context context, Button button, Button buttonPair, boolean mirrorState) {
         super(context);
 
         this.setContentView(R.layout.number_picker_dialog);
@@ -49,6 +48,9 @@ class NumberDialog extends Dialog{
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(hourPicker.getValue() + minutePicker.getValue() + secondPicker.getValue() == 0) {
+                    Toast.makeText(getContext(),"Please choose a valid time", Toast.LENGTH_SHORT).show();
+                } else {
                     button.setText(createButtonString());
 
                     if(mirrorState){
@@ -57,6 +59,7 @@ class NumberDialog extends Dialog{
 
                     dismiss();
                 }
+            }
         });
 
         this.show();

@@ -6,6 +6,72 @@
     android:orientation="vertical"
     android:baselineAligned="false">
 
+    <RadioGroup
+        android:id="@+id/radioTimeSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:paddingBottom="25dp">
+
+        <RadioButton
+            android:id="@+id/time1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:textAlignment="center"
+            android:text="25 | 0"
+            android:textColor="@color/radio_flat_text_selector" />
+
+        <RadioButton
+            android:id="@+id/time2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:textAlignment="center"
+            android:text="15 | 10"
+            android:textColor="@color/radio_flat_text_selector" />
+
+        <RadioButton
+            android:id="@+id/time3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:textAlignment="center"
+            android:text="10 | 0"
+            android:textColor="@color/radio_flat_text_selector" />
+
+        <RadioButton
+            android:id="@+id/time4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:textAlignment="center"
+            android:checked="true"
+            android:text="5 | 0"
+            android:textColor="@color/radio_flat_text_selector" />
+
+        <RadioButton
+            android:id="@+id/time5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:textAlignment="center"
+            android:text="3 | 2"
+            android:textColor="@color/radio_flat_text_selector" />
+
+    </RadioGroup>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,9 +102,12 @@
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/p1Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             android:text="white"
             />
 
@@ -51,9 +120,12 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/p2Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             android:text="black"
             />
 
@@ -62,7 +134,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <Button
             android:id="@+id/whiteTimeButton"
@@ -94,7 +167,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <Button
             android:id="@+id/whiteIncrementButton"
@@ -126,7 +200,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <Button
             android:id="@+id/whiteDelayButton"
@@ -156,12 +231,14 @@
     </LinearLayout>
 
     <CheckBox
+        android:id="@+id/mirrorTimeBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mirror Time Settings"
         android:checked="true"/>
 
     <CheckBox
+        android:id="@+id/hourglassBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enable Hourglass Mode" />
