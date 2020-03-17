@@ -73,6 +73,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             vh2.finalTimeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    new TimeNumberDialog(v.getContext(),vh2.finalTimeButton);
                     if(listener != null) {
                         int position = vh2.getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {

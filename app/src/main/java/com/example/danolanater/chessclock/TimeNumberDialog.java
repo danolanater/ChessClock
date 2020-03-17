@@ -19,6 +19,7 @@ class TimeNumberDialog extends Dialog{
 
         this.setContentView(R.layout.number_picker_dialog);
 
+        setupDialog(button);
         initializeDialog(button, buttonPair, mirrorState);
 
         this.show();
@@ -30,21 +31,46 @@ class TimeNumberDialog extends Dialog{
 
         this.setContentView(R.layout.number_picker_dialog);
 
+        setupDialog(button);
         initializeDialog(button);
 
         this.show();
     }
 
+    // hh:mm:ss
     private String createButtonString() {
-        if(hourPicker.getValue() == 0) {
-            if (secondPicker.getValue() == 0)
-                return minutePicker.getValue() + ":00";
-            else if (secondPicker.getValue() < 10)
-                return minutePicker.getValue() + ":0" + secondPicker.getValue();
-            else
-                return minutePicker.getValue() + ":" + secondPicker.getValue();
+        hours = hourPicker.getValue();
+        mins = minutePicker.getValue();
+        secs = secondPicker.getValue();
+
+        if(hours > 0) {
+            if(mins > 9) {
+                if(secs > 9) { // ##:##:##
+                    return hours + ":" + mins + ":" + secs;
+                } else { // ##:##:0#
+                    return hours + ":" + mins + ":0" + secs;
+                }
+            } else {
+                if(secs > 9) { // ##:0#:##
+                    return hours + ":0" + mins + ":" + secs;
+                } else { // ##:0#:0#
+                    return hours + ":0" + mins + ":0" + secs;
+                }
+            }
         } else {
-            return hourPicker.getValue() + "hr " + minutePicker.getValue() + "mins";
+            if(mins > 9) {
+                if(secs > 9) { // ##:##
+                    return mins + ":" + secs;
+                } else { // ##:0#
+                    return mins + ":0" + secs;
+                }
+            } else {
+                if(secs > 9) { // 0#:##
+                    return mins + ":" + secs;
+                } else { // 0#:0#
+                    return mins + ":0" + secs;
+                }
+            }
         }
 
     }
@@ -55,25 +81,14 @@ class TimeNumberDialog extends Dialog{
             mins = Integer.parseInt(time[0]);
             secs = Integer.parseInt(time[1]);
         } else {
-            if(s.charAt(3) == ' ') {
-                hours = Integer.parseInt(s.substring(0,1));
-                if(s.charAt(6) == 'm')
-                    mins = Integer.parseInt(s.substring(4,6));
-                else
-                    mins = Integer.parseInt(s.substring(4,5));
-            } else {
-                hours = Integer.parseInt(s.substring(0,2));
-                if(s.charAt(7) == 'm')
-                    mins = Integer.parseInt(s.substring(5,7));
-                else
-                    mins = Integer.parseInt(s.substring(5,6));
-            }
-
+            hours = Integer.parseInt(time[0]);
+            mins = Integer.parseInt(time[1]);
+            secs = Integer.parseInt(time[2]);
         }
+
     }
 
     private void initializeDialog(Button button, Button buttonPair, boolean mirrorState) {
-
 
         Button okButton = (Button) findViewById(R.id.okButton);
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +110,22 @@ class TimeNumberDialog extends Dialog{
     }
 
     private void initializeDialog(Button button) {
+
+        Button okButton = (Button) findViewById(R.id.okButton);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hourPicker.getValue() + minutePicker.getValue() + secondPicker.getValue() == 0) {
+                    Toast.makeText(getContext(),"Please choose a valid time", Toast.LENGTH_SHORT).show();
+                } else {
+                    button.setText(createButtonString());
+                    dismiss();
+                }
+            }
+        });
+    }
+
+    private void setupDialog(Button button) {
         hourPicker = (NumberPicker) this.findViewById(R.id.hourPicker);
         minutePicker = (NumberPicker) this.findViewById(R.id.minutePicker);
         secondPicker = (NumberPicker) this.findViewById(R.id.secondPicker);
@@ -118,19 +149,6 @@ class TimeNumberDialog extends Dialog{
             @Override
             public void onClick(View v) {
                 dismiss();
-            }
-        });
-
-        Button okButton = (Button) findViewById(R.id.okButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(hourPicker.getValue() + minutePicker.getValue() + secondPicker.getValue() == 0) {
-                    Toast.makeText(getContext(),"Please choose a valid time", Toast.LENGTH_SHORT).show();
-                } else {
-                    button.setText(createButtonString());
-                    dismiss();
-                }
             }
         });
     }
