@@ -1,26 +1,12 @@
 package com.example.danolanater.chessclock;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.time.Clock;
-
-// todo: come up with other game modes
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         standardButton = (Button) findViewById(R.id.standardButton);
         fideButton = (Button) findViewById(R.id.fideButton);
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentLayout, new StandardGameFragment());
         fragmentTransaction.commit();

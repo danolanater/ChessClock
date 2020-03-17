@@ -22,7 +22,7 @@
             android:background="@drawable/radio_flat_selector"
             android:button="@android:color/transparent"
             android:textAlignment="center"
-            android:text="CCA"
+            android:text="Continental"
             android:textColor="@color/radio_flat_text_selector" />
 
         <RadioButton
@@ -33,7 +33,7 @@
             android:background="@drawable/radio_flat_selector"
             android:button="@android:color/transparent"
             android:textAlignment="center"
-            android:text="FIDE Short"
+            android:text="US Chess"
             android:textColor="@color/radio_flat_text_selector" />
 
         <RadioButton
@@ -45,7 +45,7 @@
             android:button="@android:color/transparent"
             android:textAlignment="center"
             android:checked="true"
-            android:text="FIDE Long"
+            android:text="Candidates"
             android:textColor="@color/radio_flat_text_selector" />
 
     </RadioGroup>
@@ -103,123 +103,13 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoSizeTextType="uniform"
-            android:text="Stage 1"
-            android:textAlignment="center"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="40"
-            android:background="@drawable/radio_flat_selected"
-            android:textColor="@color/colorWhite"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="moves in"
-            android:textAlignment="center"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="1:40:00"
-            android:background="@drawable/radio_flat_selected"
-            android:textColor="@color/colorWhite"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoSizeTextType="uniform"
-            android:text="Stage 2"
-            android:textAlignment="center"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="20"
-            android:background="@drawable/radio_flat_selected"
-            android:textColor="@color/colorWhite"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="moves in"
-            android:textAlignment="center"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="50:00"
-            android:background="@drawable/radio_flat_selected"
-            android:textColor="@color/colorWhite"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoSizeTextType="uniform"
-            android:text="Stage 3"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="∞"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text=" moves in"
-            android:textAlignment="center"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/radio_flat_selected"
-            android:textColor="@color/colorWhite"
-            android:text="15:00"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -235,7 +125,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/whiteIncrementButton"
+            android:id="@+id/tournamentIncrementButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -252,7 +142,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/blackIncrementButton"
+            android:id="@+id/tournamentDelayButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -262,12 +152,22 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/stagesListView"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="10dp">
 
-    </ListView>
+    </View>
+
+    <Button
+        android:id="@+id/addStageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Stage"
+        android:layout_gravity="center"
+        android:background="@drawable/radio_flat_selected"
+        android:textColor="@color/colorWhite"
+        />
+
 
     <LinearLayout
         android:layout_width="match_parent"
