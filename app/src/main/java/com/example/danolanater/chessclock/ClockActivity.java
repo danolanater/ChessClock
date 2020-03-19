@@ -6,26 +6,43 @@ import android.os.CountDownTimer;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-// todo: show move count
+// todo: handle bundles from Standard Fragment, handle bundle from tournament Fragment, update menu buttons
 
 public class ClockActivity extends AppCompatActivity {
 
-    private String whiteTimeString, blackTimeString, whiteIncrementString, blackIncrementString;
+    private TextView whiteMovesTextView, blackMovesTextView, stagesRemainingTextView;
     private Button whiteButton, blackButton;
-    private int whiteTimeInt, blackTimeInt, whiteIncrementInt, blackIncrementInt;
+    private int whiteTimeInt, blackTimeInt, whiteIncrementInt, blackIncrementInt, whiteDelayInt, blackDelayInt;
+
+    private ImageView settings, play, pause, restart;
+
     private CountDownTimer whiteTimer, blackTimer;
     private int whiteMoveCount = 0, blackMoveCount = -1;
+    private boolean isStandard;
+    private boolean isStopwatch = false;
+    private Chronometer whiteChronometer, blackChronometer;
+    private long whiteStopwatchOffset = 0, blackStopwatchOffset = 0;
+
+    private boolean activeGame = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clock_layout);
 
-        whiteButton = findViewById(R.id.buttonWhite);
-        blackButton = findViewById(R.id.buttonBlack);
+        Intent in = getIntent();
+        Bundle b = in.getExtras();
+        setValues(b);
 
         // this timer has no use other than to exist so initial calls to blackTimer wont throw errors
         blackTimer = new CountDownTimer(1, 0) {
@@ -40,95 +57,256 @@ public class ClockActivity extends AppCompatActivity {
             }
         };
 
-        whiteButton.setEnabled(false);
-
-        Intent in = getIntent();
-        Bundle b = in.getExtras();
-        setValues(b);
+        whiteButton.setClickable(false);
 
 
+        if(isStopwatch) {
 
-        blackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                whiteTimer = new CountDownTimer(whiteTimeInt, 100) {
-
-                    @Override
-                public void onTick(long millisUntilFinished) {
-                    whiteTimeInt -= 100;
-                    whiteButton.setText(parseString(whiteTimeInt));
-
-                }
-
+            blackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onFinish() {
-                    whiteButton.setClickable(false);
+                public void onClick(View v) {
+                    activeGame = true;
+
+                    whiteChronometer.setBase(SystemClock.elapsedRealtime() - whiteStopwatchOffset);
+                    whiteChronometer.start();
+
+                    blackChronometer.stop();
+                    blackStopwatchOffset = SystemClock.elapsedRealtime() - blackChronometer.getBase();
+
+                    incrementBlackMove();
+
                     blackButton.setClickable(false);
-                    whiteButton.setText("Black Wins!");
+                    whiteButton.setClickable(true);
                 }
-            };
+            });
 
-                blackTimer.cancel();
-                blackMoveCount++;
-                whiteTimer.start();
+            whiteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activeGame = true;
 
-                if(blackIncrementInt > 0 && blackMoveCount != 0){
-                    blackTimeInt += blackIncrementInt;
-                    blackButton.setText(parseString(blackTimeInt));
+                    blackChronometer.setBase(SystemClock.elapsedRealtime() - blackStopwatchOffset);
+                    blackChronometer.start();
+
+                    whiteStopwatchOffset = SystemClock.elapsedRealtime() - whiteChronometer.getBase();
+                    whiteChronometer.stop();
+
+                    incrementWhiteMove();
+
+                    whiteButton.setClickable(false);
+                    blackButton.setClickable(true);
                 }
-                whiteButton.setEnabled(true);
-                blackButton.setEnabled(false);
+            });
+        } else if(isStandard) {
+            blackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
+                    setToActiveGame();
+                        whiteTimer = new CountDownTimer(whiteTimeInt, 100) {
+                            int delay = whiteDelayInt;
 
-        whiteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                if(activeGame) {
+                                    if (delay > 0) {
+                                        delay -= 100;
+                                    } else {
+                                        whiteTimeInt -= 100;
+                                        whiteButton.setText(parseString(whiteTimeInt));
+                                    }
+                                }
+                            }
 
-                    blackTimer = new CountDownTimer(blackTimeInt, 100) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            blackTimeInt -= 100;
+                            @Override
+                            public void onFinish() {
+                                whiteButton.setClickable(false);
+                                blackButton.setClickable(false);
+                                whiteButton.setText("Black Wins!");
+                            }
+                        };
+
+                        blackTimer.cancel();
+                        incrementBlackMove();
+                        whiteTimer.start();
+
+                        if (blackIncrementInt > 0 && blackMoveCount != 0) {
+                            blackTimeInt += blackIncrementInt;
                             blackButton.setText(parseString(blackTimeInt));
-
                         }
-
-                        @Override
-                        public void onFinish() {
-                            blackButton.setClickable(false);
-                            whiteButton.setClickable(false);
-                            blackButton.setText("White Wins!");
-                        }
-                    };
-                    whiteTimer.cancel();
-                    whiteMoveCount++;
-                    blackTimer.start();
-                if(whiteIncrementInt > 0){
-                    whiteTimeInt += whiteIncrementInt;
-                    whiteButton.setText(parseString(whiteTimeInt));
+                        whiteButton.setEnabled(true);
+                        blackButton.setEnabled(false);
                 }
-                    whiteButton.setEnabled(false);
-                    blackButton.setEnabled(true);
+            });
 
-            }
-        });
+            whiteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    setToActiveGame();
+                        blackTimer = new CountDownTimer(blackTimeInt, 100) {
+                            int delay = blackDelayInt;
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                if(activeGame) {
+                                    if (delay > 0) {
+                                        delay -= 100;
+                                    } else {
+                                        blackTimeInt -= 100;
+                                        blackButton.setText(parseString(blackTimeInt));
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                blackButton.setClickable(false);
+                                whiteButton.setClickable(false);
+                                blackButton.setText("White Wins!");
+                            }
+                        };
+
+                        whiteTimer.cancel();
+                        incrementWhiteMove();
+                        blackTimer.start();
+                        if (whiteIncrementInt > 0) {
+                            whiteTimeInt += whiteIncrementInt;
+                            whiteButton.setText(parseString(whiteTimeInt));
+                        }
+                        whiteButton.setEnabled(false);
+                        blackButton.setEnabled(true);
+                }
+            });
+        }
+
+    }
+
+    private void setToActiveGame() {
+        activeGame = true;
+        displayPauseIcon();
     }
 
 
     private void setValues(Bundle b) {
-        whiteTimeString = b.getString("whiteTime");
-        blackTimeString = b.getString("blackTime");
-        whiteIncrementString = b.getString("whiteIncrement");
-        blackIncrementString = b.getString("blackIncrement");
 
-        whiteTimeInt = parseTime(whiteTimeString);
-        blackTimeInt = parseTime(blackTimeString);
-        whiteIncrementInt = parseTime(whiteIncrementString);
-        blackIncrementInt = parseTime(blackIncrementString);
+        whiteButton = (Button) findViewById(R.id.buttonWhite);
+        blackButton = (Button) findViewById(R.id.buttonBlack);
 
-        whiteButton.setText(parseString(whiteTimeInt));
-        blackButton.setText(parseString(blackTimeInt));
+        whiteMovesTextView = (TextView) findViewById(R.id.whiteMovesTextView);
+        blackMovesTextView = (TextView) findViewById(R.id.blackMovesTextView);
+        stagesRemainingTextView = (TextView) findViewById(R.id.stagesRemainingTextView);
+
+        settings = (ImageView) findViewById(R.id.settings);
+        play = (ImageView) findViewById(R.id.play);
+        pause = (ImageView) findViewById(R.id.pause);
+        restart = (ImageView) findViewById(R.id.restart);
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleGameState();
+            }
+        });
+
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleGameState();
+            }
+        });
+
+
+        // Standard Game Mode
+        if(b.getString("gameMode").equals("Standard")){
+            isStandard = true;
+            stagesRemainingTextView.setVisibility(View.GONE);
+
+            // Stopwatch Mode Game
+            if(b.getBoolean("stopwatchMode")) {
+                isStopwatch = true;
+
+                whiteButton.setText("00:00");
+                blackButton.setText("00:00");
+
+                whiteChronometer = findViewById(R.id.whiteChronometer);
+                blackChronometer = findViewById(R.id.blackChronometer);
+
+                Chronometer.OnChronometerTickListener whiteChronometerTickListener = new Chronometer.OnChronometerTickListener() {
+                    @Override
+                    public void onChronometerTick(Chronometer chronometer) {
+                        whiteButton.setText(whiteChronometer.getText());
+                    }
+                };
+
+                Chronometer.OnChronometerTickListener blackChronometerTickListener = new Chronometer.OnChronometerTickListener() {
+                    @Override
+                    public void onChronometerTick(Chronometer chronometer) {
+                        blackButton.setText(blackChronometer.getText());
+                    }
+                };
+
+                whiteChronometer.setOnChronometerTickListener(whiteChronometerTickListener);
+                blackChronometer.setOnChronometerTickListener(blackChronometerTickListener);
+
+            } else {
+
+                whiteTimeInt = parseTime(b.getString("whiteTime"));
+                blackTimeInt = parseTime(b.getString("blackTime"));
+
+                whiteIncrementInt = parseTime(b.getString("whiteIncrement"));
+                blackIncrementInt = parseTime(b.getString("blackIncrement"));
+
+                whiteDelayInt = parseTime(b.getString("whiteDelay"));
+                blackDelayInt = parseTime(b.getString("blackDelay"));
+
+                whiteButton.setText(parseString(whiteTimeInt));
+                blackButton.setText(parseString(blackTimeInt));
+
+
+            }
+        } else if (b.getString("gameMode") == "Tournament") {
+            // do stuff
+        }
+
+
+
+
+    }
+
+    private void toggleGameState() {
+            activeGame = !activeGame;
+
+            if(activeGame)
+                displayPauseIcon();
+            else
+                displayPlayIcon();
+    }
+
+    private void displayPauseIcon() {
+        play.setVisibility(View.GONE);
+        pause.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams settingsParams = (RelativeLayout.LayoutParams) settings.getLayoutParams();
+        settingsParams.addRule(RelativeLayout.START_OF, pause.getId());
+        settings.setLayoutParams(settingsParams);
+
+        RelativeLayout.LayoutParams restartParams = (RelativeLayout.LayoutParams) restart.getLayoutParams();
+        restartParams.addRule(RelativeLayout.END_OF, pause.getId());
+        restart.setLayoutParams(restartParams);
+    }
+
+    private void displayPlayIcon() {
+        play.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.GONE);
+
+        RelativeLayout.LayoutParams settingsParams = (RelativeLayout.LayoutParams) settings.getLayoutParams();
+        settingsParams.addRule(RelativeLayout.START_OF, play.getId());
+        settings.setLayoutParams(settingsParams);
+
+        RelativeLayout.LayoutParams restartParams = (RelativeLayout.LayoutParams) restart.getLayoutParams();
+        restartParams.addRule(RelativeLayout.END_OF, play.getId());
+        restart.setLayoutParams(restartParams);
     }
 
     private int parseTime(String s) {
@@ -225,6 +403,16 @@ public class ClockActivity extends AppCompatActivity {
                 return "0:0" + sec + ":" + tenth;
         }
 
+    }
+
+    private void incrementWhiteMove() {
+        whiteMoveCount++;
+        whiteMovesTextView.setText("Moves: " + whiteMoveCount);
+    }
+
+    private void incrementBlackMove() {
+        blackMoveCount++;
+        blackMovesTextView.setText("Moves: " + blackMoveCount);
     }
 
 }

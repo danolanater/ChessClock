@@ -39,7 +39,6 @@
             android:textAlignment="center"
             android:text="Standard"
             android:textColor="@color/radio_flat_text_selector"
-
             />
 
         <RadioButton

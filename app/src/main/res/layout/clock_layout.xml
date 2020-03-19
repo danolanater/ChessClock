@@ -11,39 +11,96 @@
         android:id="@+id/buttonWhite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_centerInParent="true"
         android:layout_weight="2"
         android:autoSizeTextType="uniform"
         android:background="#ffffff"
         android:rotation="180"
-        android:text="Button"
         android:textColor="#000000" />
+
+    <Chronometer
+        android:id="@+id/whiteChronometer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible" />
+
+    <Chronometer
+        android:id="@+id/blackChronometer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <Button
+        <TextView
+            android:id="@+id/whiteMovesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@+id/Play"
-            android:text="Settings" />
+            android:text="Moves: 0"
+            android:rotation="180"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
 
-        <Button
-            android:id="@+id/Play"
+        <TextView
+            android:id="@+id/stagesRemainingTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Play" />
+            android:text="Stage # of #"
+            android:rotation="90"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"/>
 
-        <Button
+
+        <ImageView
+            android:id="@+id/settings"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:rotation="90"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/play"
+            android:src="@drawable/settings"
+            android:tint="@color/colorPrimaryDark" />
+
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:rotation="90"
+            android:layout_centerInParent="true"
+            android:src="@drawable/play"
+            android:tint="@color/colorPrimaryDark" />
+
+        <ImageView
+            android:id="@+id/pause"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:rotation="90"
+            android:layout_centerInParent="true"
+            android:src="@drawable/pause"
+            android:tint="@color/colorPrimaryDark"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/restart"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:rotation="90"
+            android:tint="@color/colorPrimaryDark"
+            android:src="@drawable/replay"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/play" />
+
+        <TextView
+            android:id="@+id/blackMovesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@+id/Play"
-            android:text="Reset" />
+            android:text="Black starts the match by pressing their timer."
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"/>
 
 
     </RelativeLayout>
@@ -56,7 +113,6 @@
         android:layout_weight="2"
         android:autoSizeTextType="uniform"
         android:background="#000000"
-        android:text="Button"
         android:textColor="#ffffff" />
 
 

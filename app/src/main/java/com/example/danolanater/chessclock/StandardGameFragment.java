@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import java.sql.Time;
-
 public class StandardGameFragment extends Fragment{
 
     private Button whiteTimeButton, blackTimeButton, whiteIncrementButton, blackIncrementButton, whiteDelayButton, blackDelayButton, startButton;
@@ -180,6 +178,8 @@ public class StandardGameFragment extends Fragment{
             public void onClick(View v) {
 
                 Bundle b = new Bundle();
+
+                b.putString("gameMode", "Standard");
 
                 b.putString("whiteName", p1Name.toString());
                 b.putString("blackName", p2Name.toString());
