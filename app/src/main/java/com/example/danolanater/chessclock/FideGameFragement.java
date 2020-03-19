@@ -99,6 +99,19 @@ public class FideGameFragement extends Fragment implements RecyclerViewAdapter.O
             }
         });
 
+        incrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimeNumberDialog(getContext(),incrementButton, "Tournament Increment");
+            }
+        });
+
+        delayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimeNumberDialog(getContext(), delayButton, "Tournament Delay");
+            }
+        });
         return  view;
     }
 

@@ -132,6 +132,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/timeRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -165,6 +166,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/incrementRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -198,6 +200,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/delayRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -242,6 +245,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enable Hourglass Mode" />
+
+    <CheckBox
+        android:id="@+id/stopwatchBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enable Stopwatch Mode" />
 
     <LinearLayout
         android:layout_width="match_parent"

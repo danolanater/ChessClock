@@ -74,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
 
-                    new TimeNumberDialog(v.getContext(),vh2.finalTimeButton);
+                    new TimeNumberDialog(v.getContext(),vh2.finalTimeButton, "Final Stage Time");
                     if(listener != null) {
                         int position = vh2.getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
@@ -101,7 +101,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             vh.timeButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    new TimeNumberDialog(v.getContext(), vh.timeButton);
+                    new TimeNumberDialog(v.getContext(), vh.timeButton, vh.stageNameText.getText().toString() + " Time");
                 }
             });
 

@@ -111,6 +111,28 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp">
+
+    </View>
+
+    <Button
+        android:id="@+id/addStageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Stage"
+        android:layout_gravity="center"
+        android:background="@drawable/radio_flat_selected"
+        android:textColor="@color/colorWhite"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp">
+
+    </View>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -148,25 +170,11 @@
             android:layout_weight="1"
             android:background="@drawable/radio_flat_selected"
             android:textColor="@color/colorWhite"
-            android:text="0:30" />
+            android:text="0:00" />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp">
 
-    </View>
-
-    <Button
-        android:id="@+id/addStageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Stage"
-        android:layout_gravity="center"
-        android:background="@drawable/radio_flat_selected"
-        android:textColor="@color/colorWhite"
-        />
 
 
     <LinearLayout

@@ -3,36 +3,43 @@ package com.example.danolanater.chessclock;
 import android.app.Dialog;
 import android.content.Context;
 import androidx.annotation.NonNull;
+
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 class TimeNumberDialog extends Dialog{
 
+    private TextView title;
     private NumberPicker hourPicker, minutePicker, secondPicker;
     private int hours, mins, secs;
 
 
-    public TimeNumberDialog(@NonNull Context context, Button button, Button buttonPair, boolean mirrorState) {
+    public TimeNumberDialog(@NonNull Context context, Button button, Button buttonPair, boolean mirrorState, String buttonName) {
         super(context);
 
         this.setContentView(R.layout.number_picker_dialog);
 
-        setupDialog(button);
+        setupDialog(button, buttonName);
         initializeDialog(button, buttonPair, mirrorState);
+        this.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         this.show();
 
     }
 
-    public TimeNumberDialog(@NonNull Context context, Button button) {
+    public TimeNumberDialog(@NonNull Context context, Button button, String buttonName) {
         super(context);
 
         this.setContentView(R.layout.number_picker_dialog);
 
-        setupDialog(button);
+        setupDialog(button, buttonName);
         initializeDialog(button);
+        this.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         this.show();
     }
@@ -94,7 +101,11 @@ class TimeNumberDialog extends Dialog{
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(hourPicker.getValue() + minutePicker.getValue() + secondPicker.getValue() == 0) {
+                String timeString = title.getText().toString();
+                boolean isTime = false;
+                if(timeString == "Time" || timeString == "White Time" || timeString == "Black Time")
+                    isTime = true;
+                if(hourPicker.getValue() + minutePicker.getValue() + secondPicker.getValue() == 0 && isTime) {
                     Toast.makeText(getContext(),"Please choose a valid time", Toast.LENGTH_SHORT).show();
                 } else {
                     button.setText(createButtonString());
@@ -125,7 +136,10 @@ class TimeNumberDialog extends Dialog{
         });
     }
 
-    private void setupDialog(Button button) {
+    private void setupDialog(Button button, String buttonName) {
+        title = (TextView) findViewById(R.id.dialogTitle);
+        title.setText(buttonName);
+
         hourPicker = (NumberPicker) this.findViewById(R.id.hourPicker);
         minutePicker = (NumberPicker) this.findViewById(R.id.minutePicker);
         secondPicker = (NumberPicker) this.findViewById(R.id.secondPicker);
@@ -152,5 +166,4 @@ class TimeNumberDialog extends Dialog{
             }
         });
     }
-
 }

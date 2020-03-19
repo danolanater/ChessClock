@@ -11,16 +11,22 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import java.sql.Time;
 
 public class StandardGameFragment extends Fragment{
 
     private Button whiteTimeButton, blackTimeButton, whiteIncrementButton, blackIncrementButton, whiteDelayButton, blackDelayButton, startButton;
     private EditText p1Name, p2Name;
+    private RadioGroup radioGroup;
     private RadioButton[] rb = new RadioButton[5];
-    private CheckBox mirrorTimeBox, hourglassBox;
+    private CheckBox mirrorTimeBox, hourglassBox, stopwatchBox;
     private View view;
-    private boolean mirrorTimeSettings = true, hourglassSettings = false;
+    private LinearLayout timeRow, incrementRow, delayRow;
+    private boolean mirrorTimeSettings = true, hourglassSettings = false, stopwatchSettings = false;
 
     @Nullable
     @Override
@@ -28,17 +34,26 @@ public class StandardGameFragment extends Fragment{
 
         view = inflater.inflate(R.layout.standard_game, container, false);
 
+        radioGroup = (RadioGroup) view.findViewById(R.id.radioTimeSelector);
+
         p1Name = (EditText) view.findViewById(R.id.p1Name);
         p2Name = (EditText) view.findViewById(R.id.p2Name);
 
+        timeRow = (LinearLayout) view.findViewById(R.id.timeRow);
         whiteTimeButton = (Button) view.findViewById(R.id.whiteTimeButton);
         blackTimeButton = (Button) view.findViewById(R.id.blackTimeButton);
+
+        incrementRow = (LinearLayout) view.findViewById(R.id.incrementRow);
         whiteIncrementButton = (Button) view.findViewById(R.id.whiteIncrementButton);
         blackIncrementButton = (Button) view.findViewById(R.id.blackIncrementButton);
+
+        delayRow = (LinearLayout) view.findViewById(R.id.delayRow);
         whiteDelayButton = (Button) view.findViewById(R.id.whiteDelayButton);
         blackDelayButton = (Button) view.findViewById(R.id.blackDelayButton);
+
         mirrorTimeBox = (CheckBox) view.findViewById(R.id.mirrorTimeBox);
         hourglassBox = (CheckBox) view.findViewById(R.id.hourglassBox);
+        stopwatchBox = (CheckBox) view.findViewById(R.id.stopwatchBox);
         startButton = (Button) view.findViewById(R.id.startButton);
 
         rb[0] = (RadioButton) view.findViewById(R.id.time1);
@@ -51,42 +66,61 @@ public class StandardGameFragment extends Fragment{
         whiteTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimeNumberDialog(getContext(), whiteTimeButton, blackTimeButton, mirrorTimeSettings);
+                if(mirrorTimeSettings)
+                    new TimeNumberDialog(getContext(), whiteTimeButton, blackTimeButton, mirrorTimeSettings, "Time");
+
+                else
+                    new TimeNumberDialog(getContext(), whiteTimeButton, blackTimeButton, mirrorTimeSettings, "White Time");
             }
         });
 
         blackTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimeNumberDialog(getContext(), blackTimeButton, whiteTimeButton, mirrorTimeSettings);
+                if(mirrorTimeSettings)
+                    new TimeNumberDialog(getContext(), blackTimeButton, whiteTimeButton, mirrorTimeSettings, "Time");
+                else
+                    new TimeNumberDialog(getContext(), blackTimeButton, whiteTimeButton, mirrorTimeSettings, "Black Time");
             }
         });
 
         whiteIncrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NumberDialog(getContext(), whiteIncrementButton, blackIncrementButton, mirrorTimeSettings);
+                if(mirrorTimeSettings)
+                    new TimeNumberDialog(getContext(), whiteIncrementButton, blackIncrementButton, mirrorTimeSettings, "Increment");
+                else
+                    new TimeNumberDialog(getContext(), whiteIncrementButton, blackIncrementButton, mirrorTimeSettings, "White Increment");
             }
         });
 
         blackIncrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NumberDialog(getContext(), blackIncrementButton, whiteIncrementButton, mirrorTimeSettings);
+                if(mirrorTimeSettings)
+                    new TimeNumberDialog(getContext(), blackIncrementButton, whiteIncrementButton, mirrorTimeSettings, "Increment");
+                else
+                    new TimeNumberDialog(getContext(), blackIncrementButton, whiteIncrementButton, mirrorTimeSettings, "Black Increment");
             }
         });
 
         whiteDelayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NumberDialog(getContext(), whiteDelayButton, blackDelayButton, mirrorTimeSettings);
+                if(mirrorTimeSettings)
+                    new TimeNumberDialog(getContext(), whiteDelayButton, blackDelayButton, mirrorTimeSettings, "Delay");
+                else
+                    new TimeNumberDialog(getContext(), whiteDelayButton, blackDelayButton, mirrorTimeSettings, "White Delay");
             }
         });
 
         blackDelayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NumberDialog(getContext(), blackDelayButton, whiteDelayButton, mirrorTimeSettings);
+                if(mirrorTimeSettings)
+                    new TimeNumberDialog(getContext(), blackDelayButton, whiteDelayButton, mirrorTimeSettings, "Delay");
+                else
+                    new TimeNumberDialog(getContext(), blackDelayButton, whiteDelayButton, mirrorTimeSettings, "Black Delay");
             }
         });
 
@@ -118,6 +152,29 @@ public class StandardGameFragment extends Fragment{
             }
         });
 
+        stopwatchBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                stopwatchSettings = isChecked;
+
+                if(isChecked) {
+                    radioGroup.setVisibility(View.GONE);
+                    timeRow.setVisibility(View.GONE);
+                    incrementRow.setVisibility(View.GONE);
+                    delayRow.setVisibility(View.GONE);
+                    mirrorTimeBox.setVisibility(View.GONE);
+                    hourglassBox.setVisibility(View.GONE);
+                } else {
+                    radioGroup.setVisibility(View.VISIBLE);
+                    timeRow.setVisibility(View.VISIBLE);
+                    incrementRow.setVisibility(View.VISIBLE);
+                    delayRow.setVisibility(View.VISIBLE);
+                    mirrorTimeBox.setVisibility(View.VISIBLE);
+                    hourglassBox.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,6 +194,7 @@ public class StandardGameFragment extends Fragment{
                 b.putString("blackDelay", blackDelayButton.getText().toString());
 
                 b.putBoolean("hourglassMode", hourglassSettings);
+                b.putBoolean("stopwatchMode", stopwatchSettings);
 
                 Intent clockActivity = new Intent(getContext(), ClockActivity.class);
                 clockActivity.putExtras(b);
