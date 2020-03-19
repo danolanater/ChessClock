@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// todo: handle bundles from Standard Fragment, handle bundle from tournament Fragment, update menu buttons
+// todo: handle bundle from tournament Fragment, update menu buttons
 
 public class ClockActivity extends AppCompatActivity {
 
@@ -31,7 +31,7 @@ public class ClockActivity extends AppCompatActivity {
     private boolean isStandard;
     private boolean isStopwatch = false;
     private Chronometer whiteChronometer, blackChronometer;
-    private long whiteStopwatchOffset = 0, blackStopwatchOffset = 0;
+    private long whiteStopwatchOffset = 0, blackStopwatchOffset = 0, pauseBase = 0;
 
     private boolean activeGame = false;
 
@@ -65,7 +65,7 @@ public class ClockActivity extends AppCompatActivity {
             blackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activeGame = true;
+                    setToActiveGame();
 
                     whiteChronometer.setBase(SystemClock.elapsedRealtime() - whiteStopwatchOffset);
                     whiteChronometer.start();
@@ -83,7 +83,7 @@ public class ClockActivity extends AppCompatActivity {
             whiteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activeGame = true;
+                    setToActiveGame();
 
                     blackChronometer.setBase(SystemClock.elapsedRealtime() - blackStopwatchOffset);
                     blackChronometer.start();
@@ -97,7 +97,8 @@ public class ClockActivity extends AppCompatActivity {
                     blackButton.setClickable(true);
                 }
             });
-        } else if(isStandard) {
+        }
+        else if(isStandard) {
             blackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -205,6 +206,20 @@ public class ClockActivity extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(whiteMoveCount == 0 && blackMoveCount == -1) {
+                    blackButton.callOnClick();
+                }
+
+                if(isStopwatch) {
+                    // if it's whites turn
+                    if(whiteMoveCount == blackMoveCount) {
+                        whiteChronometer.setBase(SystemClock.elapsedRealtime() - (pauseBase - whiteChronometer.getBase()));
+                    } else { //it's blacks turn
+                        blackChronometer.setBase(SystemClock.elapsedRealtime() - (pauseBase - blackChronometer.getBase()));
+                    }
+                }
+
                 toggleGameState();
             }
         });
@@ -213,6 +228,10 @@ public class ClockActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 toggleGameState();
+
+                if(isStopwatch) {
+                    pauseBase = SystemClock.elapsedRealtime();
+                }
             }
         });
 
@@ -235,14 +254,16 @@ public class ClockActivity extends AppCompatActivity {
                 Chronometer.OnChronometerTickListener whiteChronometerTickListener = new Chronometer.OnChronometerTickListener() {
                     @Override
                     public void onChronometerTick(Chronometer chronometer) {
-                        whiteButton.setText(whiteChronometer.getText());
+                        if(activeGame)
+                            whiteButton.setText(whiteChronometer.getText());
                     }
                 };
 
                 Chronometer.OnChronometerTickListener blackChronometerTickListener = new Chronometer.OnChronometerTickListener() {
                     @Override
                     public void onChronometerTick(Chronometer chronometer) {
-                        blackButton.setText(blackChronometer.getText());
+                        if(activeGame)
+                            blackButton.setText(blackChronometer.getText());
                     }
                 };
 
