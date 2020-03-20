@@ -207,10 +207,6 @@ public class ClockActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(whiteMoveCount == 0 && blackMoveCount == -1) {
-                    blackButton.callOnClick();
-                }
-
                 if(isStopwatch) {
                     // if it's whites turn
                     if(whiteMoveCount == blackMoveCount) {
@@ -221,6 +217,10 @@ public class ClockActivity extends AppCompatActivity {
                 }
 
                 toggleGameState();
+
+                if(whiteMoveCount == 0 && blackMoveCount == -1) {
+                    blackButton.callOnClick();
+                }
             }
         });
 

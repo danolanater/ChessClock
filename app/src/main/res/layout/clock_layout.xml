@@ -68,7 +68,6 @@
             android:id="@+id/play"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:rotation="90"
             android:layout_centerInParent="true"
             android:src="@drawable/play"
             android:tint="@color/colorPrimaryDark" />
@@ -77,7 +76,6 @@
             android:id="@+id/pause"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:rotation="90"
             android:layout_centerInParent="true"
             android:src="@drawable/pause"
             android:tint="@color/colorPrimaryDark"
@@ -87,7 +85,6 @@
             android:id="@+id/restart"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:rotation="90"
             android:tint="@color/colorPrimaryDark"
             android:src="@drawable/replay"
             android:layout_centerInParent="true"
