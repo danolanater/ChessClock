@@ -28,12 +28,13 @@ public class ClockActivity extends AppCompatActivity {
 
     private CountDownTimer whiteTimer, blackTimer;
     private int whiteMoveCount = 0, blackMoveCount = -1;
-    private boolean isStandard;
+    private boolean isStandard, isHourglass;
     private boolean isStopwatch = false;
     private Chronometer whiteChronometer, blackChronometer;
     private long whiteStopwatchOffset = 0, blackStopwatchOffset = 0, pauseBase = 0;
 
     private boolean activeGame = false;
+    private String whiteText, blackText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,8 +115,16 @@ public class ClockActivity extends AppCompatActivity {
                                         delay -= 100;
                                     } else {
                                         whiteTimeInt -= 100;
-                                        whiteButton.setText(parseString(whiteTimeInt));
+                                        if(isHourglass)
+                                            blackTimeInt += 100;
+
+                                        blackText = parseString(blackTimeInt);
+                                        whiteText = parseString(whiteTimeInt);
+                                        blackButton.setText(blackText);
+                                        whiteButton.setText(whiteText);
                                     }
+
+
                                 }
                             }
 
@@ -155,8 +164,16 @@ public class ClockActivity extends AppCompatActivity {
                                         delay -= 100;
                                     } else {
                                         blackTimeInt -= 100;
-                                        blackButton.setText(parseString(blackTimeInt));
+                                        if(isHourglass)
+                                            whiteTimeInt += 100;
+
+                                        blackText = parseString(blackTimeInt);
+                                        whiteText = parseString(whiteTimeInt);
+                                        blackButton.setText(blackText);
+                                        whiteButton.setText(whiteText);
                                     }
+
+
                                 }
                             }
 
@@ -283,6 +300,10 @@ public class ClockActivity extends AppCompatActivity {
 
                 whiteButton.setText(parseString(whiteTimeInt));
                 blackButton.setText(parseString(blackTimeInt));
+
+                if(b.getBoolean("hourglassMode")) {
+                    isHourglass = true;
+                }
 
 
             }
