@@ -92,6 +92,15 @@
             android:layout_toEndOf="@+id/play" />
 
         <TextView
+            android:id="@+id/tournamentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:rotation="90"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"/>
+
+        <TextView
             android:id="@+id/blackMovesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

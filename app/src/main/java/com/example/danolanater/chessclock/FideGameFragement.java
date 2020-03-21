@@ -1,6 +1,8 @@
 package com.example.danolanater.chessclock;
 
 import androidx.fragment.app.Fragment;
+
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +22,7 @@ public class FideGameFragement extends Fragment implements RecyclerViewAdapter.O
     private View view;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
-    private Button addStageButton, incrementButton, delayButton;
+    private Button addStageButton, incrementButton, delayButton, startButton;
     private RadioButton[] rb = new RadioButton[3];
     private ArrayList<Stage> stageArray = new ArrayList<>();
 
@@ -35,6 +37,7 @@ public class FideGameFragement extends Fragment implements RecyclerViewAdapter.O
         rb[2] = (RadioButton) view.findViewById(R.id.tournament3);
         incrementButton = (Button) view.findViewById(R.id.tournamentIncrementButton);
         delayButton = (Button) view.findViewById(R.id.tournamentDelayButton);
+        startButton = (Button) view.findViewById(R.id.startButton);
 
         for(RadioButton button : rb) {
             button.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +115,39 @@ public class FideGameFragement extends Fragment implements RecyclerViewAdapter.O
                 new TimeNumberDialog(getContext(), delayButton, "Tournament Delay");
             }
         });
+
+        startButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+
+
+                Bundle b = new Bundle();
+
+                b.putString("gameMode", "Tournament");
+                b.putString("tournamentName", getTournamentName());
+                b.putParcelableArrayList("stages",stageArray);
+
+                b.putString("whiteIncrement", incrementButton.getText().toString());
+                b.putString("blackIncrement", incrementButton.getText().toString());
+
+                b.putString("whiteDelay", delayButton.getText().toString());
+                b.putString("blackDelay", delayButton.getText().toString());
+
+                Intent clockActivity = new Intent(getContext(), ClockActivity.class);
+                clockActivity.putExtras(b);
+                startActivity(clockActivity);
+            }
+        });
         return  view;
+    }
+
+    private String getTournamentName() {
+        for(RadioButton button : rb) {
+            if(button.isChecked())
+                return button.getText().toString();
+        }
+        return null;
     }
 
     private void presetSelection(RadioButton button) {

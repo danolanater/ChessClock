@@ -16,11 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 // todo: handle bundle from tournament Fragment, update menu buttons
 
 public class ClockActivity extends AppCompatActivity {
 
-    private TextView whiteMovesTextView, blackMovesTextView, stagesRemainingTextView;
+    private TextView whiteMovesTextView, blackMovesTextView, stagesRemainingTextView, tournamentNameTextView;
     private Button whiteButton, blackButton;
     private int whiteTimeInt, blackTimeInt, whiteIncrementInt, blackIncrementInt, whiteDelayInt, blackDelayInt;
 
@@ -28,13 +30,16 @@ public class ClockActivity extends AppCompatActivity {
 
     private CountDownTimer whiteTimer, blackTimer;
     private int whiteMoveCount = 0, blackMoveCount = -1;
-    private boolean isStandard, isHourglass;
+    private boolean isHourglass;
     private boolean isStopwatch = false;
     private Chronometer whiteChronometer, blackChronometer;
     private long whiteStopwatchOffset = 0, blackStopwatchOffset = 0, pauseBase = 0;
 
     private boolean activeGame = false;
     private String whiteText, blackText;
+
+    private ArrayList<Stage> stages;
+    private Stage currentStage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +104,7 @@ public class ClockActivity extends AppCompatActivity {
                 }
             });
         }
-        else if(isStandard) {
+        else  {
             blackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -214,6 +219,7 @@ public class ClockActivity extends AppCompatActivity {
         whiteMovesTextView = (TextView) findViewById(R.id.whiteMovesTextView);
         blackMovesTextView = (TextView) findViewById(R.id.blackMovesTextView);
         stagesRemainingTextView = (TextView) findViewById(R.id.stagesRemainingTextView);
+        tournamentNameTextView = (TextView) findViewById(R.id.tournamentName);
 
         settings = (ImageView) findViewById(R.id.settings);
         play = (ImageView) findViewById(R.id.play);
@@ -252,12 +258,6 @@ public class ClockActivity extends AppCompatActivity {
             }
         });
 
-
-        // Standard Game Mode
-        if(b.getString("gameMode").equals("Standard")){
-            isStandard = true;
-            stagesRemainingTextView.setVisibility(View.GONE);
-
             // Stopwatch Mode Game
             if(b.getBoolean("stopwatchMode")) {
                 isStopwatch = true;
@@ -289,8 +289,7 @@ public class ClockActivity extends AppCompatActivity {
 
             } else {
 
-                whiteTimeInt = parseTime(b.getString("whiteTime"));
-                blackTimeInt = parseTime(b.getString("blackTime"));
+
 
                 whiteIncrementInt = parseTime(b.getString("whiteIncrement"));
                 blackIncrementInt = parseTime(b.getString("blackIncrement"));
@@ -298,21 +297,42 @@ public class ClockActivity extends AppCompatActivity {
                 whiteDelayInt = parseTime(b.getString("whiteDelay"));
                 blackDelayInt = parseTime(b.getString("blackDelay"));
 
-                whiteButton.setText(parseString(whiteTimeInt));
-                blackButton.setText(parseString(blackTimeInt));
 
-                if(b.getBoolean("hourglassMode")) {
-                    isHourglass = true;
+                // Standard Game Mode
+                if(b.getString("gameMode").equals("Standard")){
+
+                    whiteTimeInt = parseTime(b.getString("whiteTime"));
+                    blackTimeInt = parseTime(b.getString("blackTime"));
+
+                    whiteButton.setText(parseString(whiteTimeInt));
+                    blackButton.setText(parseString(blackTimeInt));
+
+                    if(b.getBoolean("hourglassMode")) {
+                        isHourglass = true;
+                    }
+
+                    stagesRemainingTextView.setVisibility(View.GONE);
+                    tournamentNameTextView.setVisibility(View.GONE);
+
+                // Tournament Game Mode
+                } else if (b.getString("gameMode").equals("Tournament")) {
+
+                    stages = b.getParcelableArrayList("stages");
+
+                    currentStage = stages.get(0);
+
+                    whiteTimeInt = parseTime(currentStage.getTime());
+                    blackTimeInt = parseTime(currentStage.getTime());
+
+                    whiteButton.setText(parseString(whiteTimeInt));
+                    blackButton.setText(parseString(blackTimeInt));
+
+                    stagesRemainingTextView.setText(currentStage.getName() + " of " + stages.size());
+                    tournamentNameTextView.setText(b.getString("tournamentName"));
                 }
 
 
             }
-        } else if (b.getString("gameMode") == "Tournament") {
-            // do stuff
-        }
-
-
-
 
     }
 
@@ -352,31 +372,21 @@ public class ClockActivity extends AppCompatActivity {
     }
 
     private int parseTime(String s) {
-        if(s.split(":").length == 2) {
-            String[] minsAndSecs = s.split(":");
-            int mins = Integer.parseInt(minsAndSecs[0]);
-            int secs = Integer.parseInt(minsAndSecs[1]);
+
+        String[] time = s.split(":");
+        int secs, mins, hours;
+
+        if(time.length == 2) {
+            mins = Integer.parseInt(time[0]);
+            secs = Integer.parseInt(time[1]);
 
             return (mins * 60 + secs) * 1000;
         } else {
+            hours = Integer.parseInt(time[0]);
+            mins = Integer.parseInt(time[1]);
+            secs = Integer.parseInt(time[2]);
 
-            int hours, mins;
-
-            if(s.charAt(3) == ' ') {
-                hours = Integer.parseInt(s.substring(0,1));
-                if(s.charAt(6) == 'm')
-                    mins = Integer.parseInt(s.substring(4,6));
-                else
-                    mins = Integer.parseInt(s.substring(4,5));
-            } else {
-                hours = Integer.parseInt(s.substring(0,2));
-                if(s.charAt(7) == 'm')
-                    mins = Integer.parseInt(s.substring(5,7));
-                else
-                    mins = Integer.parseInt(s.substring(5,6));
-            }
-
-            return (hours * 60 + mins) * 60 * 1000;
+            return ((hours * 60 + mins) * 60 + secs) * 1000;
         }
 
     }
