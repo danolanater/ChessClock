@@ -120,7 +120,7 @@ public class FideGameFragement extends Fragment implements RecyclerViewAdapter.O
             @Override
             public void onClick(View v) {
 
-
+                prepareStageValues();
 
                 Bundle b = new Bundle();
 
@@ -140,6 +140,11 @@ public class FideGameFragement extends Fragment implements RecyclerViewAdapter.O
             }
         });
         return  view;
+    }
+
+    private void prepareStageValues() {
+        for(int i = 0; i < stageArray.size(); i++) {
+        }
     }
 
     private String getTournamentName() {
